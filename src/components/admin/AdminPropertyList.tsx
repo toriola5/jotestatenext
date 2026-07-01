@@ -36,14 +36,15 @@ export default function AdminPropertyList({
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-225 text-sm">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               {["Title", "Type", "Listing", "Price", "Location", "Status", "Date", "Actions"].map(
                 (h) => (
                   <th
                     key={h}
-                    className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                    className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap"
                   >
                     {h}
                   </th>
@@ -57,10 +58,10 @@ export default function AdminPropertyList({
                 <td className="px-5 py-4 font-medium text-gray-900 max-w-[180px]">
                   <span className="truncate block">{p.title}</span>
                 </td>
-                <td className="px-5 py-4 text-gray-600 capitalize">
+                <td className="px-5 py-4 text-gray-600 capitalize whitespace-nowrap">
                   {p.property_type}
                 </td>
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 whitespace-nowrap">
                   <span
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
                       p.listing_type === "sale"
@@ -71,13 +72,13 @@ export default function AdminPropertyList({
                     {p.listing_type}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-gray-700 font-medium">
+                <td className="px-5 py-4 text-gray-700 font-medium whitespace-nowrap">
                   {formatPrice(p.price)}
                 </td>
-                <td className="px-5 py-4 text-gray-600">
+                <td className="px-5 py-4 text-gray-600 whitespace-nowrap">
                   {p.city}, {p.state}
                 </td>
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 whitespace-nowrap">
                   <span
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
                       p.status === "active"
@@ -88,10 +89,10 @@ export default function AdminPropertyList({
                     {p.status}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-gray-400 text-xs">
+                <td className="px-5 py-4 text-gray-400 text-xs whitespace-nowrap">
                   {formatDate(p.created_at)}
                 </td>
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/admin/edit-property/${p.id}`}
@@ -106,6 +107,7 @@ export default function AdminPropertyList({
             ))}
           </tbody>
         </table>
+        </div>
 
         {properties.length === 0 && (
           <div className="text-center py-16 text-gray-400">
