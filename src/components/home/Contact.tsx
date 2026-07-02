@@ -10,9 +10,10 @@ export default function Contact() {
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               Contact Us
             </p>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Get In Touch
             </h2>
+            <div className="w-10 h-1 bg-[var(--primary)] rounded-full mb-4" />
             <p className="text-gray-500 mb-8 leading-relaxed">
               Ready to find your dream property? Our team is here to help you
               every step of the way.

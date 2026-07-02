@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Search, MapPin, Home, TrendingUp } from "lucide-react";
+import { Search, MapPin, ChevronDown } from "lucide-react";
+import HeroStats from "@/components/home/HeroStats";
 
 export default function Hero() {
   return (
@@ -54,22 +55,14 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-16 flex items-center gap-10">
-            {[
-              { icon: Home, value: "500+", label: "Properties" },
-              { icon: MapPin, value: "20+", label: "Cities" },
-              { icon: TrendingUp, value: "98%", label: "Client Satisfaction" },
-            ].map(({ icon: Icon, value, label }) => (
-              <div key={label} className="text-center">
-                <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <Icon size={16} className="text-[var(--primary)]" />
-                  <p className="text-2xl font-bold text-white">{value}</p>
-                </div>
-                <p className="text-gray-400 text-xs">{label}</p>
-              </div>
-            ))}
-          </div>
+          <HeroStats />
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 animate-bounce">
+        <span className="text-white/50 text-[10px] tracking-widest uppercase">Scroll</span>
+        <ChevronDown size={18} className="text-white/50" />
       </div>
     </section>
   );

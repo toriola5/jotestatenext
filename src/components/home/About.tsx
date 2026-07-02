@@ -42,9 +42,10 @@ export default function About() {
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               About Us
             </p>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Nigeria&apos;s Most Trusted Real Estate Agency
             </h2>
+            <div className="w-10 h-1 bg-[var(--primary)] rounded-full mb-4" />
             <p className="text-gray-600 mb-4 leading-relaxed">
               <strong>J.ola Toriola Real Estate Agency</strong>
               is built on a solid reputation for delivering trusted,

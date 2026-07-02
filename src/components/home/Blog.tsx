@@ -52,6 +52,7 @@ export default function Blog() {
             <h2 className="text-3xl font-bold text-gray-900">
               Latest from Our Blog
             </h2>
+            <div className="mt-2 w-10 h-1 bg-[var(--primary)] rounded-full" />
             <p className="text-gray-500 mt-1 text-sm">
               Stay updated with the latest information about Jola Estates Agency
             </p>

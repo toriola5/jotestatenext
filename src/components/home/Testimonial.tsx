@@ -19,6 +19,7 @@ export default function Testimonial() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -46,14 +47,14 @@ export default function Testimonial() {
   const prev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
   const next = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
 
-  // Auto-advance every 5s
+  // Auto-advance every 5s — pauses while hovering
   useEffect(() => {
     if (total <= VISIBLE) return;
     const id = setInterval(() => {
-      setIndex((i) => (i >= maxIndex ? 0 : i + 1));
+      if (!isHovered) setIndex((i) => (i >= maxIndex ? 0 : i + 1));
     }, 5000);
     return () => clearInterval(id);
-  }, [total, maxIndex]);
+  }, [total, maxIndex, isHovered]);
 
   if (loading) {
     return (
@@ -64,6 +65,7 @@ export default function Testimonial() {
               Testimonials
             </p>
             <h2 className="text-3xl font-bold text-gray-900">What Our Clients Say</h2>
+            <div className="mt-2 w-10 h-1 bg-[var(--primary)] rounded-full" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
@@ -97,6 +99,7 @@ export default function Testimonial() {
               Testimonials
             </p>
             <h2 className="text-3xl font-bold text-gray-900">What Our Clients Say</h2>
+            <div className="mt-2 w-10 h-1 bg-[var(--primary)] rounded-full" />
             <p className="text-gray-500 mt-1 text-sm">
               {total} verified review{total !== 1 ? "s" : ""}
             </p>
@@ -129,6 +132,8 @@ export default function Testimonial() {
             style={{
               transform: `translateX(calc(-${index} * (100% / ${VISIBLE} + 8px)))`,
             }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
             {reviews.map((r) => (
               <div

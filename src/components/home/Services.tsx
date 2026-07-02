@@ -68,6 +68,7 @@ export default function Services() {
             What We Offer
           </p>
           <h2 className="text-3xl font-bold text-gray-900">Our Services</h2>
+          <div className="mt-3 mx-auto w-10 h-1 bg-[var(--primary)] rounded-full" />
           <p className="text-gray-500 mt-3 max-w-xl mx-auto">
             End-to-end real estate services tailored to meet every property
             need.
@@ -80,8 +81,9 @@ export default function Services() {
               key={title}
               data-animate="up"
               data-delay={String(index + 1)}
-              className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col"
+              className="group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col overflow-hidden"
             >
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--primary)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               <div className="w-12 h-12 rounded-xl bg-[var(--accent)] flex items-center justify-center mb-4">
                 <Icon size={22} className="text-[var(--primary)]" />
               </div>

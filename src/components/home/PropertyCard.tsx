@@ -84,13 +84,15 @@ export default function PropertyCard({ property }: { property: Property }) {
         <span className="absolute top-3 left-3 bg-[var(--primary)] text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
           {property.listing_type}
         </span>
+
+        {/* Price badge on image */}
+        <span className="absolute bottom-3 left-3 bg-white/95 text-[var(--primary)] font-bold text-sm px-3 py-1 rounded-lg shadow-sm z-10">
+          {formatPrice(property.price)}
+        </span>
       </div>
 
       {/* Details */}
       <div className="p-5">
-        <p className="text-[var(--primary)] font-bold text-xl mb-1">
-          {formatPrice(property.price)}
-        </p>
         <h3 className="font-semibold text-gray-900 text-base mb-2 line-clamp-1">
           {property.title}
         </h3>
