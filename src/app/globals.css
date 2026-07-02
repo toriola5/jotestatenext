@@ -53,3 +53,65 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* ─── Scroll-reveal animations ──────────────────────────────────────────── */
+/* Only applied once JS has run (ScrollReveal adds .js-animate to <html>)    */
+/* This prevents a flash of invisible content during SSR.                    */
+
+.js-animate [data-animate] {
+  opacity: 0;
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
+}
+
+.js-animate [data-animate="up"] {
+  transform: translateY(36px);
+}
+
+.js-animate [data-animate="left"] {
+  transform: translateX(-36px);
+}
+
+.js-animate [data-animate="right"] {
+  transform: translateX(36px);
+}
+
+.js-animate [data-animate="scale"] {
+  transform: scale(0.94);
+}
+
+/* When the element enters the viewport */
+.js-animate [data-animate].in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays for grid/list items */
+[data-delay="1"] {
+  transition-delay: 80ms;
+}
+[data-delay="2"] {
+  transition-delay: 160ms;
+}
+[data-delay="3"] {
+  transition-delay: 240ms;
+}
+[data-delay="4"] {
+  transition-delay: 320ms;
+}
+[data-delay="5"] {
+  transition-delay: 400ms;
+}
+[data-delay="6"] {
+  transition-delay: 480ms;
+}
+
+/* Respect user's motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .js-animate [data-animate] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

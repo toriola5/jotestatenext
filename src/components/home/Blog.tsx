@@ -44,7 +44,7 @@ export default function Blog() {
   return (
     <section id="blog" className="pt-10 pb-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-14">
+        <div className="flex items-end justify-between mb-14" data-animate="up">
           <div>
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               Our Blog
@@ -65,9 +65,11 @@ export default function Blog() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <article
               key={post.id}
+              data-animate="up"
+              data-delay={String(index + 1)}
               className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md overflow-hidden transition-shadow"
             >
               <div className="relative aspect-[16/9] overflow-hidden">

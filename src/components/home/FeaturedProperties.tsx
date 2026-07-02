@@ -23,12 +23,14 @@ export default async function FeaturedProperties() {
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-12">
+        <div className="flex items-end justify-between mb-12" data-animate="up">
           <div>
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               Properties
             </p>
-            <h2 className="text-3xl font-bold text-gray-900">Latest Listings</h2>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Latest Listings
+            </h2>
             <p className="text-gray-500 mt-1 text-sm">
               Freshly added properties available for sale, rent, and shortlet
             </p>
@@ -42,8 +44,14 @@ export default async function FeaturedProperties() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+          {properties.map((property, index) => (
+            <div
+              key={property.id}
+              data-animate="up"
+              data-delay={String(index + 1)}
+            >
+              <PropertyCard property={property} />
+            </div>
           ))}
         </div>
 

@@ -36,7 +36,7 @@ export default function Faqs() {
   return (
     <section id="faqs" className="pt-10 pb-20 bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12" data-animate="up">
           <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
             FAQs
           </p>
@@ -49,6 +49,8 @@ export default function Faqs() {
           {faqs.map((faq, i) => (
             <div
               key={i}
+              data-animate="up"
+              data-delay={String(i + 1)}
               className="bg-white rounded-xl border border-gray-100 overflow-hidden"
             >
               <button

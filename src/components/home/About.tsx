@@ -22,7 +22,7 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top grid: image + intro */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-          <div className="relative">
+          <div className="relative" data-animate="left">
             <div className="aspect-[4/3] rounded-2xl overflow-hidden">
               <Image
                 src="/house.jpg"
@@ -38,7 +38,7 @@ export default function About() {
             </div>
           </div>
 
-          <div>
+          <div data-animate="right">
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               About Us
             </p>
@@ -75,7 +75,10 @@ export default function About() {
         </div>
 
         {/* Bottom: detailed content cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-10 border-t border-gray-100">
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-10 border-t border-gray-100"
+          data-animate="up"
+        >
           <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
             <div className="w-11 h-11 rounded-xl bg-[var(--accent)] flex items-center justify-center mb-4">
               <Building2 size={20} className="text-[var(--primary)]" />

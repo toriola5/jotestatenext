@@ -6,7 +6,7 @@ export default function Contact() {
     <section id="contact" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-          <div>
+          <div data-animate="left">
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               Contact Us
             </p>
@@ -45,7 +45,10 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="relative rounded-2xl overflow-hidden min-h-[560px]">
+          <div
+            className="relative rounded-2xl overflow-hidden min-h-[560px]"
+            data-animate="right"
+          >
             <Image
               src="/contact.jpg"
               alt="Contact Jola Estates"
