@@ -30,7 +30,7 @@ export default function Testimonial() {
           snapshot.docs.map((doc) => ({
             id: doc.id,
             ...(doc.data() as Omit<Review, "id">),
-          }))
+          })),
         );
       } catch (err) {
         console.error("Failed to fetch reviews:", err);
@@ -45,7 +45,10 @@ export default function Testimonial() {
   const maxIndex = Math.max(0, total - VISIBLE);
 
   const prev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
-  const next = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
+  const next = useCallback(
+    () => setIndex((i) => Math.min(maxIndex, i + 1)),
+    [maxIndex],
+  );
 
   // Auto-advance every 5s — pauses while hovering
   useEffect(() => {
@@ -64,14 +67,21 @@ export default function Testimonial() {
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               Testimonials
             </p>
-            <h2 className="text-3xl font-bold text-gray-900">What Our Clients Say</h2>
+            <h2 className="text-3xl font-bold text-gray-900">
+              What Our Clients Say
+            </h2>
             <div className="mt-2 w-10 h-1 bg-[var(--primary)] rounded-full" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-gray-50 rounded-2xl p-6 border border-gray-100 animate-pulse">
+              <div
+                key={i}
+                className="bg-gray-50 rounded-2xl p-6 border border-gray-100 animate-pulse"
+              >
                 <div className="flex gap-1 mb-4">
-                  {[1,2,3,4,5].map((s) => <div key={s} className="w-4 h-4 rounded bg-gray-200" />)}
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <div key={s} className="w-4 h-4 rounded bg-gray-200" />
+                  ))}
                 </div>
                 <div className="space-y-2 mb-5">
                   <div className="h-3 bg-gray-200 rounded w-full" />
@@ -98,7 +108,9 @@ export default function Testimonial() {
             <p className="text-[var(--primary)] font-semibold text-sm uppercase tracking-widest mb-2">
               Testimonials
             </p>
-            <h2 className="text-3xl font-bold text-gray-900">What Our Clients Say</h2>
+            <h2 className="text-3xl font-bold text-gray-900">
+              What Our Clients Say
+            </h2>
             <div className="mt-2 w-10 h-1 bg-[var(--primary)] rounded-full" />
             <p className="text-gray-500 mt-1 text-sm">
               {total} verified review{total !== 1 ? "s" : ""}
@@ -139,7 +151,10 @@ export default function Testimonial() {
               <div
                 key={r.id}
                 className="bg-gray-50 rounded-2xl p-6 border border-gray-100 flex flex-col shrink-0"
-                style={{ width: `calc(100% / ${VISIBLE} - 16px)`, minWidth: "260px" }}
+                style={{
+                  width: `calc(100% / ${VISIBLE} - 16px)`,
+                  minWidth: "260px",
+                }}
               >
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (

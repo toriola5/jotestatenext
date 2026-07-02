@@ -61,7 +61,9 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 animate-bounce">
-        <span className="text-white/50 text-[10px] tracking-widest uppercase">Scroll</span>
+        <span className="text-white/50 text-[10px] tracking-widest uppercase">
+          Scroll
+        </span>
         <ChevronDown size={18} className="text-white/50" />
       </div>
     </section>

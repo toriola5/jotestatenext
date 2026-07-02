@@ -3,7 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, BedDouble, Bath, Maximize2, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  MapPin,
+  BedDouble,
+  Bath,
+  Maximize2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import { formatPrice } from "@/lib/utils";
 import type { Property } from "@/lib/propertyQuery";
@@ -23,7 +30,10 @@ export default function PropertyCard({ property }: { property: Property }) {
   };
 
   return (
-    <Link href={`/listings/${property.id}`} className="block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+    <Link
+      href={`/listings/${property.id}`}
+      className="block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group"
+    >
       {/* Image area */}
       <div className="relative h-52 bg-gray-100 overflow-hidden">
         {images.length > 0 ? (
@@ -59,7 +69,10 @@ export default function PropertyCard({ property }: { property: Property }) {
                   {images.map((_, i) => (
                     <button
                       key={i}
-                      onClick={(e) => { e.preventDefault(); setCurrent(i); }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrent(i);
+                      }}
                       className={`w-1.5 h-1.5 rounded-full transition-colors ${
                         i === current ? "bg-white" : "bg-white/50"
                       }`}

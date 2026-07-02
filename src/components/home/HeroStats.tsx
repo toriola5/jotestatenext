@@ -29,12 +29,7 @@ function useCountUp(target: number, duration = 1500, active: boolean) {
   return count;
 }
 
-function StatItem({
-  icon: Icon,
-  value,
-  suffix,
-  label,
-}: (typeof stats)[0]) {
+function StatItem({ icon: Icon, value, suffix, label }: (typeof stats)[0]) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
   const count = useCountUp(value, 1500, active);

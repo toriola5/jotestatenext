@@ -69,7 +69,8 @@ export default function Nav() {
               className="rounded-lg object-cover"
             />
             <span className="text-base font-bold text-gray-900 leading-tight">
-              Jola Toriola<br />
+              Jola Toriola
+              <br />
               <span className="text-[var(--primary)]">Estates</span>
             </span>
           </Link>
