@@ -11,6 +11,8 @@ export default async function PropertiesMap() {
     const result = await fetchPropertiesWithPagination({
       currentPage: 1,
       itemsPerPage: 200,
+      selectFields: "id,title,price,city,state,address,images,latitude,longitude",
+      skipCount: true,
     });
     properties = result.properties;
   } catch {

@@ -36,6 +36,7 @@ export async function fetchPropertiesWithPagination(options: {
   filters?: PropertyFilters;
   includeInactive?: boolean;
   selectFields?: string;
+  skipCount?: boolean;
 }) {
   const {
     currentPage = 1,
@@ -43,23 +44,12 @@ export async function fetchPropertiesWithPagination(options: {
     filters = {},
     includeInactive = false,
     selectFields = "*",
+    skipCount = false,
   } = options;
 
   const supabase = await createClient();
   const from = (currentPage - 1) * itemsPerPage;
   const to = from + itemsPerPage - 1;
-
-  let countQuery = supabase
-    .from("properties")
-    .select("*", { count: "exact", head: true });
-
-  if (!includeInactive) countQuery = countQuery.eq("status", "active");
-
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value && value !== "all") countQuery = countQuery.eq(key, value);
-  });
-
-  const { count } = await countQuery;
 
   let dataQuery = supabase
     .from("properties")
@@ -73,7 +63,31 @@ export async function fetchPropertiesWithPagination(options: {
     if (value && value !== "all") dataQuery = dataQuery.eq(key, value);
   });
 
-  const { data, error } = await dataQuery.returns<Property[]>();
+  if (skipCount) {
+    const { data, error } = await dataQuery.returns<Property[]>();
+    if (error) throw error;
+    return {
+      properties: data || [],
+      totalCount: data?.length ?? 0,
+      currentPage,
+      totalPages: 1,
+    };
+  }
+
+  let countQuery = supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true });
+
+  if (!includeInactive) countQuery = countQuery.eq("status", "active");
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value && value !== "all") countQuery = countQuery.eq(key, value);
+  });
+
+  const [{ count }, { data, error }] = await Promise.all([
+    countQuery,
+    dataQuery.returns<Property[]>(),
+  ]);
   if (error) throw error;
 
   return {
