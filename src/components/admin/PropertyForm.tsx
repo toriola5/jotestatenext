@@ -51,6 +51,12 @@ export default function PropertyForm({ property }: Props) {
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [videoPreviews, setVideoPreviews] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(
+    property?.images ?? [],
+  );
+  const [existingVideos, setExistingVideos] = useState<string[]>(
+    property?.video_urls ?? [],
+  );
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
     property?.features ?? [],
   );
@@ -92,6 +98,12 @@ export default function PropertyForm({ property }: Props) {
     setVideoFiles((prev) => prev.filter((_, idx) => idx !== i));
   };
 
+  const removeExistingImage = (i: number) =>
+    setExistingImages((prev) => prev.filter((_, idx) => idx !== i));
+
+  const removeExistingVideo = (i: number) =>
+    setExistingVideos((prev) => prev.filter((_, idx) => idx !== i));
+
   const toggleFeature = (f: string) =>
     setSelectedFeatures((prev) =>
       prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f],
@@ -101,7 +113,7 @@ export default function PropertyForm({ property }: Props) {
     e.preventDefault();
     setUploadError(null);
 
-    if (!isEdit && imageFiles.length === 0) {
+    if (existingImages.length + imageFiles.length === 0) {
       setUploadError("At least one image is required.");
       return;
     }
@@ -124,10 +136,13 @@ export default function PropertyForm({ property }: Props) {
 
     setUploading(true);
     try {
-      const [imageUrls, videoUrls] = await Promise.all([
+      const [newImageUrls, newVideoUrls] = await Promise.all([
         Promise.all(imageFiles.map(uploadImageToStorage)),
         Promise.all(videoFiles.map(uploadVideoToStorage)),
       ]);
+
+      const imageUrls = [...existingImages, ...newImageUrls];
+      const videoUrls = [...existingVideos, ...newVideoUrls];
 
       const fd = new FormData(formRef.current!);
       imageUrls.forEach((url) => fd.append("imageUrls", url));
@@ -394,14 +409,14 @@ export default function PropertyForm({ property }: Props) {
           Images {!isEdit && <span className="text-red-500">*</span>}
         </h3>
 
-        {isEdit && property.images?.length > 0 && (
+        {isEdit && existingImages.length > 0 && (
           <div>
             <p className="text-xs text-gray-400 mb-2">Current images</p>
             <div className="flex flex-wrap gap-2 mb-4">
-              {property.images.map((url, i) => (
+              {existingImages.map((url, i) => (
                 <div
-                  key={i}
-                  className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200"
+                  key={url}
+                  className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 group"
                 >
                   <Image
                     src={url}
@@ -409,6 +424,13 @@ export default function PropertyForm({ property }: Props) {
                     fill
                     className="object-cover"
                   />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(i)}
+                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors"
+                  >
+                    <X size={12} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -418,9 +440,7 @@ export default function PropertyForm({ property }: Props) {
         <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-red-400 rounded-xl py-8 cursor-pointer transition-colors">
           <ImagePlus size={24} className="text-gray-400" />
           <span className="text-sm text-gray-500">
-            {isEdit
-              ? "Upload new images (replaces existing)"
-              : "Click to upload images"}
+            {isEdit ? "Add more images" : "Click to upload images"}
           </span>
           <span className="text-xs text-gray-400">
             JPG, PNG, WebP — max 5MB each
@@ -450,7 +470,7 @@ export default function PropertyForm({ property }: Props) {
                 <button
                   type="button"
                   onClick={() => removeImagePreview(i)}
-                  className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors"
                 >
                   <X size={12} />
                 </button>
@@ -466,6 +486,32 @@ export default function PropertyForm({ property }: Props) {
           Videos{" "}
           <span className="text-gray-400 font-normal text-xs">(optional)</span>
         </h3>
+
+        {isEdit && existingVideos.length > 0 && (
+          <div>
+            <p className="text-xs text-gray-400 mb-2">Current videos</p>
+            <div className="space-y-2 mb-4">
+              {existingVideos.map((url, i) => (
+                <div
+                  key={url}
+                  className="flex items-center gap-3 bg-gray-50 rounded-lg p-3"
+                >
+                  <Video size={16} className="text-gray-400 shrink-0" />
+                  <span className="text-xs text-gray-600 truncate flex-1">
+                    Video {i + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeExistingVideo(i)}
+                    className="text-gray-400 hover:text-red-500"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-red-400 rounded-xl py-6 cursor-pointer transition-colors">
           <Video size={22} className="text-gray-400" />

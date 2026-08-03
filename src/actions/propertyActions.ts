@@ -82,6 +82,13 @@ export async function updatePropertyAction(
   if (!propertyId) return { error: "Property ID is missing." };
 
   try {
+    const imageUrls = formData.getAll("imageUrls") as string[];
+    const videoUrls = formData.getAll("videoUrls") as string[];
+
+    if (imageUrls.length === 0) {
+      return { error: "At least one image is required." };
+    }
+
     const fields: Record<string, string | string[]> = {};
     for (const [key, value] of formData.entries()) {
       if (
@@ -100,6 +107,8 @@ export async function updatePropertyAction(
       .from("properties")
       .update({
         ...preparePropertyData(fields),
+        images: imageUrls,
+        video_urls: videoUrls,
         updated_at: new Date().toISOString(),
       })
       .eq("id", propertyId);
