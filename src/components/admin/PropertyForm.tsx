@@ -39,7 +39,7 @@ const INPUT =
 const LABEL =
   "block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide";
 const SECTION =
-  "bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5";
+  "bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 space-y-5";
 
 export default function PropertyForm({ property }: Props) {
   const isEdit = !!property;
@@ -507,11 +507,11 @@ export default function PropertyForm({ property }: Props) {
       </div>
 
       {/* Submit */}
-      <div className="flex items-center gap-4 pb-8">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pb-8">
         <button
           type="submit"
           disabled={isBusy}
-          className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl disabled:opacity-60 transition-colors"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl disabled:opacity-60 transition-colors order-1 sm:order-0"
         >
           <Upload size={16} />
           {uploading
@@ -526,7 +526,7 @@ export default function PropertyForm({ property }: Props) {
         </button>
         <a
           href="/admin/properties"
-          className="px-6 py-3 border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium rounded-xl text-sm transition-colors"
+          className="px-6 py-3 border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium rounded-xl text-sm text-center transition-colors"
         >
           Cancel
         </a>

@@ -34,7 +34,7 @@ export default function AdminToast() {
   const isSuccess = type === "success";
 
   return (
-    <div className={`fixed bottom-6 right-6 z-50 flex items-start gap-3 px-5 py-4 rounded-xl shadow-xl border max-w-sm animate-in slide-in-from-bottom-4 duration-300 ${
+    <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-sm z-50 flex items-start gap-3 px-5 py-4 rounded-xl shadow-xl border animate-in slide-in-from-bottom-4 duration-300 ${
       isSuccess
         ? "bg-green-50 border-green-200 text-green-800"
         : "bg-red-50 border-red-200 text-red-800"

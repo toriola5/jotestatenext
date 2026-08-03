@@ -12,7 +12,7 @@ export default function LoginForm() {
   return (
     <form
       action={action}
-      className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 space-y-5"
+      className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-8 space-y-5"
     >
       <h2 className="text-xl font-bold text-gray-900 text-center">Sign In</h2>
       <p className="text-sm text-gray-400 text-center">
