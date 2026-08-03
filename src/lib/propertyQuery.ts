@@ -19,6 +19,8 @@ export type Property = {
   images: string[];
   video_urls: string[];
   created_at: string;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export type PropertyFilters = {
@@ -101,9 +103,6 @@ export async function deletePropertyByID(id: string) {
 
 export async function updatePropertyByID(id: string, data: Partial<Property>) {
   const supabase = await createClient();
-  const { error } = await supabase
-    .from("properties")
-    .update(data)
-    .eq("id", id);
+  const { error } = await supabase.from("properties").update(data).eq("id", id);
   if (error) throw error;
 }

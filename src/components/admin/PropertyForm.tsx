@@ -3,8 +3,16 @@
 import { useActionState, useState, useEffect } from "react";
 import Image from "next/image";
 import { X, Upload, ImagePlus, Video } from "lucide-react";
-import { nigerianStates, propertyFeatures, propertyTypes, listingTypes } from "@/lib/constants";
-import { uploadPropertyAction, updatePropertyAction } from "@/actions/propertyActions";
+import {
+  nigerianStates,
+  propertyFeatures,
+  propertyTypes,
+  listingTypes,
+} from "@/lib/constants";
+import {
+  uploadPropertyAction,
+  updatePropertyAction,
+} from "@/actions/propertyActions";
 import type { Property } from "@/lib/propertyQuery";
 
 type Props = {
@@ -13,8 +21,10 @@ type Props = {
 
 const INPUT =
   "w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-400 bg-white";
-const LABEL = "block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide";
-const SECTION = "bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5";
+const LABEL =
+  "block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide";
+const SECTION =
+  "bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5";
 
 export default function PropertyForm({ property }: Props) {
   const isEdit = !!property;
@@ -24,7 +34,7 @@ export default function PropertyForm({ property }: Props) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [videoPreviews, setVideoPreviews] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
-    property?.features ?? []
+    property?.features ?? [],
   );
 
   useEffect(() => {
@@ -53,14 +63,12 @@ export default function PropertyForm({ property }: Props) {
 
   const toggleFeature = (f: string) =>
     setSelectedFeatures((prev) =>
-      prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]
+      prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f],
     );
 
   return (
     <form action={formAction} className="space-y-6">
-      {isEdit && (
-        <input type="hidden" name="propertyId" value={property.id} />
-      )}
+      {isEdit && <input type="hidden" name="propertyId" value={property.id} />}
 
       {state?.error && (
         <div className="bg-red-50 border border-red-200 rounded-xl px-5 py-4 text-red-600 text-sm">
@@ -89,16 +97,34 @@ export default function PropertyForm({ property }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className={LABEL}>Property Type *</label>
-            <select name="propertyType" required defaultValue={property?.property_type ?? ""} className={INPUT}>
+            <select
+              name="propertyType"
+              required
+              defaultValue={property?.property_type ?? ""}
+              className={INPUT}
+            >
               <option value="">Select type</option>
-              {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+              {propertyTypes.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
             </select>
           </div>
           <div>
             <label className={LABEL}>Listing Type *</label>
-            <select name="listingType" required defaultValue={property?.listing_type ?? ""} className={INPUT}>
+            <select
+              name="listingType"
+              required
+              defaultValue={property?.listing_type ?? ""}
+              className={INPUT}
+            >
               <option value="">Select type</option>
-              {listingTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+              {listingTypes.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -138,7 +164,11 @@ export default function PropertyForm({ property }: Props) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
             { label: "Bedrooms", name: "bedrooms", value: property?.bedrooms },
-            { label: "Bathrooms", name: "bathrooms", value: property?.bathrooms },
+            {
+              label: "Bathrooms",
+              name: "bathrooms",
+              value: property?.bathrooms,
+            },
             { label: "Toilets", name: "toilet", value: property?.toilet },
             { label: "Size (sqm)", name: "size", value: property?.size },
           ].map(({ label, name, value }) => (
@@ -165,9 +195,18 @@ export default function PropertyForm({ property }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className={LABEL}>State *</label>
-            <select name="state" required defaultValue={property?.state ?? ""} className={INPUT}>
+            <select
+              name="state"
+              required
+              defaultValue={property?.state ?? ""}
+              className={INPUT}
+            >
               <option value="">Select state</option>
-              {nigerianStates.map((s) => <option key={s} value={s}>{s}</option>)}
+              {nigerianStates.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -194,6 +233,45 @@ export default function PropertyForm({ property }: Props) {
             className={INPUT}
           />
         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label className={LABEL}>Latitude</label>
+            <input
+              type="number"
+              name="latitude"
+              step="any"
+              defaultValue={property?.latitude ?? ""}
+              placeholder="e.g. 6.4281"
+              className={INPUT}
+            />
+          </div>
+          <div>
+            <label className={LABEL}>Longitude</label>
+            <input
+              type="number"
+              name="longitude"
+              step="any"
+              defaultValue={property?.longitude ?? ""}
+              placeholder="e.g. 3.4219"
+              className={INPUT}
+            />
+          </div>
+        </div>
+        <p className="text-xs text-gray-400">
+          Open{" "}
+          <a
+            href="https://maps.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--primary)] underline"
+          >
+            Google Maps
+          </a>
+          , right-click the exact property location, and the coordinates appear
+          at the top of the menu — copy the first number (latitude) and the
+          second (longitude).
+        </p>
       </div>
 
       {/* Features */}
@@ -240,8 +318,16 @@ export default function PropertyForm({ property }: Props) {
             <p className="text-xs text-gray-400 mb-2">Current images</p>
             <div className="flex flex-wrap gap-2 mb-4">
               {property.images.map((url, i) => (
-                <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200">
-                  <Image src={url} alt={`img ${i + 1}`} fill className="object-cover" />
+                <div
+                  key={i}
+                  className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200"
+                >
+                  <Image
+                    src={url}
+                    alt={`img ${i + 1}`}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               ))}
             </div>
@@ -251,9 +337,13 @@ export default function PropertyForm({ property }: Props) {
         <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-red-400 rounded-xl py-8 cursor-pointer transition-colors">
           <ImagePlus size={24} className="text-gray-400" />
           <span className="text-sm text-gray-500">
-            {isEdit ? "Upload new images (replaces existing)" : "Click to upload images"}
+            {isEdit
+              ? "Upload new images (replaces existing)"
+              : "Click to upload images"}
           </span>
-          <span className="text-xs text-gray-400">JPG, PNG, WebP — max 5MB each</span>
+          <span className="text-xs text-gray-400">
+            JPG, PNG, WebP — max 5MB each
+          </span>
           <input
             type="file"
             name="images"
@@ -268,8 +358,16 @@ export default function PropertyForm({ property }: Props) {
         {imagePreviews.length > 0 && (
           <div className="flex flex-wrap gap-3 mt-3">
             {imagePreviews.map((src, i) => (
-              <div key={i} className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-200 group">
-                <Image src={src} alt={`preview ${i + 1}`} fill className="object-cover" />
+              <div
+                key={i}
+                className="relative w-24 h-24 rounded-xl overflow-hidden border border-gray-200 group"
+              >
+                <Image
+                  src={src}
+                  alt={`preview ${i + 1}`}
+                  fill
+                  className="object-cover"
+                />
                 <button
                   type="button"
                   onClick={() => removeImagePreview(i)}
@@ -286,13 +384,16 @@ export default function PropertyForm({ property }: Props) {
       {/* Videos */}
       <div className={SECTION}>
         <h3 className="font-semibold text-gray-800 text-base border-b border-gray-100 pb-3">
-          Videos <span className="text-gray-400 font-normal text-xs">(optional)</span>
+          Videos{" "}
+          <span className="text-gray-400 font-normal text-xs">(optional)</span>
         </h3>
 
         <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-red-400 rounded-xl py-6 cursor-pointer transition-colors">
           <Video size={22} className="text-gray-400" />
           <span className="text-sm text-gray-500">Upload property video</span>
-          <span className="text-xs text-gray-400">MP4, WebM — max 100MB each</span>
+          <span className="text-xs text-gray-400">
+            MP4, WebM — max 100MB each
+          </span>
           <input
             type="file"
             name="videos"
@@ -306,12 +407,21 @@ export default function PropertyForm({ property }: Props) {
         {videoPreviews.length > 0 && (
           <div className="space-y-2 mt-3">
             {videoPreviews.map((_, i) => (
-              <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+              <div
+                key={i}
+                className="flex items-center gap-3 bg-gray-50 rounded-lg p-3"
+              >
                 <Video size={16} className="text-gray-400 shrink-0" />
-                <span className="text-xs text-gray-600 truncate flex-1">Video {i + 1}</span>
+                <span className="text-xs text-gray-600 truncate flex-1">
+                  Video {i + 1}
+                </span>
                 <button
                   type="button"
-                  onClick={() => setVideoPreviews((prev) => prev.filter((_, idx) => idx !== i))}
+                  onClick={() =>
+                    setVideoPreviews((prev) =>
+                      prev.filter((_, idx) => idx !== i),
+                    )
+                  }
                   className="text-gray-400 hover:text-red-500"
                 >
                   <X size={14} />
@@ -331,9 +441,12 @@ export default function PropertyForm({ property }: Props) {
         >
           <Upload size={16} />
           {pending
-            ? isEdit ? "Saving..." : "Uploading..."
-            : isEdit ? "Save Changes" : "Upload Property"
-          }
+            ? isEdit
+              ? "Saving..."
+              : "Uploading..."
+            : isEdit
+              ? "Save Changes"
+              : "Upload Property"}
         </button>
         <a
           href="/admin/properties"

@@ -2,6 +2,7 @@ import Hero from "@/components/home/Hero";
 import Services from "@/components/home/Services";
 import About from "@/components/home/About";
 import FeaturedProperties from "@/components/home/FeaturedProperties";
+import PropertiesMap from "@/components/home/PropertiesMap";
 import Faqs from "@/components/home/Faqs";
 import Blog from "@/components/home/Blog";
 import Review from "@/components/home/Review";
@@ -15,6 +16,7 @@ export default function HomePage() {
       <Services />
       <About />
       <FeaturedProperties />
+      <PropertiesMap />
       <Testimonial />
       <hr className="max-w-7xl mx-auto border-gray-200" />
       <Blog />

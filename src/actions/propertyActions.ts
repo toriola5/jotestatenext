@@ -21,12 +21,14 @@ function preparePropertyData(form: Record<string, string | string[]>) {
     address: (form.address as string).trim(),
     features: form.features as string[],
     status: "active",
+    latitude: form.latitude ? parseFloat(form.latitude as string) : null,
+    longitude: form.longitude ? parseFloat(form.longitude as string) : null,
   };
 }
 
 export async function uploadPropertyAction(
   _prevState: { error?: string } | null,
-  formData: FormData
+  formData: FormData,
 ) {
   try {
     const images = formData.getAll("images") as File[];
@@ -40,8 +42,11 @@ export async function uploadPropertyAction(
     }
 
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    const hasInvalidType = actualImages.some((f) => !validTypes.includes(f.type));
-    if (hasInvalidType) return { error: "Only JPG, PNG, and WebP images are allowed." };
+    const hasInvalidType = actualImages.some(
+      (f) => !validTypes.includes(f.type),
+    );
+    if (hasInvalidType)
+      return { error: "Only JPG, PNG, and WebP images are allowed." };
 
     const maxImageSize = 5 * 1024 * 1024;
     if (actualImages.some((f) => f.size > maxImageSize)) {
@@ -55,7 +60,9 @@ export async function uploadPropertyAction(
 
     const [imageUrls, videoUrls] = await Promise.all([
       uploadImages(actualImages),
-      actualVideos.length > 0 ? uploadVideos(actualVideos) : Promise.resolve([]),
+      actualVideos.length > 0
+        ? uploadVideos(actualVideos)
+        : Promise.resolve([]),
     ]);
 
     const fields: Record<string, string | string[]> = {};
@@ -78,17 +85,22 @@ export async function uploadPropertyAction(
 
     if (error) return { error: `Database error: ${error.message}` };
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Upload failed. Please try again." };
+    return {
+      error:
+        err instanceof Error ? err.message : "Upload failed. Please try again.",
+    };
   }
 
   revalidatePath("/admin/properties");
   revalidatePath("/listings");
-  redirect("/admin/properties?toast=Property+uploaded+successfully&toast_type=success");
+  redirect(
+    "/admin/properties?toast=Property+uploaded+successfully&toast_type=success",
+  );
 }
 
 export async function updatePropertyAction(
   _prevState: { error?: string } | null,
-  formData: FormData
+  formData: FormData,
 ) {
   const propertyId = formData.get("propertyId") as string;
   if (!propertyId) return { error: "Property ID is missing." };
@@ -96,7 +108,12 @@ export async function updatePropertyAction(
   try {
     const fields: Record<string, string | string[]> = {};
     for (const [key, value] of formData.entries()) {
-      if (key !== "images" && key !== "videos" && key !== "features" && key !== "propertyId") {
+      if (
+        key !== "images" &&
+        key !== "videos" &&
+        key !== "features" &&
+        key !== "propertyId"
+      ) {
         fields[key] = value as string;
       }
     }
@@ -113,12 +130,17 @@ export async function updatePropertyAction(
 
     if (error) return { error: `Update failed: ${error.message}` };
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Update failed. Please try again." };
+    return {
+      error:
+        err instanceof Error ? err.message : "Update failed. Please try again.",
+    };
   }
 
   revalidatePath("/admin/properties");
   revalidatePath("/listings");
-  redirect("/admin/properties?toast=Property+updated+successfully&toast_type=success");
+  redirect(
+    "/admin/properties?toast=Property+updated+successfully&toast_type=success",
+  );
 }
 
 export async function deleteProperty(id: string) {
