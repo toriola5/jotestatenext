@@ -1,6 +1,12 @@
 "use client";
 
-import { useActionState, useRef, useState, useEffect } from "react";
+import {
+  useActionState,
+  useRef,
+  useState,
+  useEffect,
+  startTransition,
+} from "react";
 import Image from "next/image";
 import { X, Upload, ImagePlus, Video } from "lucide-react";
 import {
@@ -127,7 +133,9 @@ export default function PropertyForm({ property }: Props) {
       imageUrls.forEach((url) => fd.append("imageUrls", url));
       videoUrls.forEach((url) => fd.append("videoUrls", url));
 
-      formAction(fd);
+      startTransition(() => {
+        formAction(fd);
+      });
     } catch (err) {
       setUploadError(
         err instanceof Error ? err.message : "Upload failed. Please try again.",
