@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { uploadImages, uploadVideos } from "@/lib/storage";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -31,43 +30,20 @@ export async function uploadPropertyAction(
   formData: FormData,
 ) {
   try {
-    const images = formData.getAll("images") as File[];
-    const videos = formData.getAll("videos") as File[];
+    const imageUrls = formData.getAll("imageUrls") as string[];
+    const videoUrls = formData.getAll("videoUrls") as string[];
 
-    const actualImages = images.filter((f) => f instanceof File && f.size > 0);
-    const actualVideos = videos.filter((f) => f instanceof File && f.size > 0);
-
-    if (actualImages.length === 0) {
+    if (imageUrls.length === 0) {
       return { error: "At least one image is required." };
     }
 
-    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    const hasInvalidType = actualImages.some(
-      (f) => !validTypes.includes(f.type),
-    );
-    if (hasInvalidType)
-      return { error: "Only JPG, PNG, and WebP images are allowed." };
-
-    const maxImageSize = 5 * 1024 * 1024;
-    if (actualImages.some((f) => f.size > maxImageSize)) {
-      return { error: "Each image must be under 5MB." };
-    }
-
-    const maxVideoSize = 100 * 1024 * 1024;
-    if (actualVideos.some((f) => f.size > maxVideoSize)) {
-      return { error: "Each video must be under 100MB." };
-    }
-
-    const [imageUrls, videoUrls] = await Promise.all([
-      uploadImages(actualImages),
-      actualVideos.length > 0
-        ? uploadVideos(actualVideos)
-        : Promise.resolve([]),
-    ]);
-
     const fields: Record<string, string | string[]> = {};
     for (const [key, value] of formData.entries()) {
-      if (key !== "images" && key !== "videos" && key !== "features") {
+      if (
+        key !== "imageUrls" &&
+        key !== "videoUrls" &&
+        key !== "features"
+      ) {
         fields[key] = value as string;
       }
     }
@@ -109,8 +85,8 @@ export async function updatePropertyAction(
     const fields: Record<string, string | string[]> = {};
     for (const [key, value] of formData.entries()) {
       if (
-        key !== "images" &&
-        key !== "videos" &&
+        key !== "imageUrls" &&
+        key !== "videoUrls" &&
         key !== "features" &&
         key !== "propertyId"
       ) {

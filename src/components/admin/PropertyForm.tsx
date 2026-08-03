@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { X, Upload, ImagePlus, Video } from "lucide-react";
 import {
@@ -13,7 +13,16 @@ import {
   uploadPropertyAction,
   updatePropertyAction,
 } from "@/actions/propertyActions";
+import {
+  uploadImageToStorage,
+  uploadVideoToStorage,
+} from "@/lib/storage-client";
 import type { Property } from "@/lib/propertyQuery";
+
+const VALID_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const VALID_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024;
 
 type Props = {
   property?: Property;
@@ -30,12 +39,17 @@ export default function PropertyForm({ property }: Props) {
   const isEdit = !!property;
   const action = isEdit ? updatePropertyAction : uploadPropertyAction;
   const [state, formAction, pending] = useActionState(action, null);
+  const formRef = useRef<HTMLFormElement>(null);
 
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [videoPreviews, setVideoPreviews] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
     property?.features ?? [],
   );
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -46,19 +60,30 @@ export default function PropertyForm({ property }: Props) {
 
   const handleImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
+    setImageFiles((prev) => [...prev, ...files]);
     const previews = files.map((f) => URL.createObjectURL(f));
     setImagePreviews((prev) => [...prev, ...previews]);
+    e.target.value = "";
   };
 
   const removeImagePreview = (i: number) => {
     URL.revokeObjectURL(imagePreviews[i]);
     setImagePreviews((prev) => prev.filter((_, idx) => idx !== i));
+    setImageFiles((prev) => prev.filter((_, idx) => idx !== i));
   };
 
   const handleVideos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
+    setVideoFiles((prev) => [...prev, ...files]);
     const previews = files.map((f) => URL.createObjectURL(f));
     setVideoPreviews((prev) => [...prev, ...previews]);
+    e.target.value = "";
+  };
+
+  const removeVideoPreview = (i: number) => {
+    URL.revokeObjectURL(videoPreviews[i]);
+    setVideoPreviews((prev) => prev.filter((_, idx) => idx !== i));
+    setVideoFiles((prev) => prev.filter((_, idx) => idx !== i));
   };
 
   const toggleFeature = (f: string) =>
@@ -66,13 +91,61 @@ export default function PropertyForm({ property }: Props) {
       prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f],
     );
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setUploadError(null);
+
+    if (!isEdit && imageFiles.length === 0) {
+      setUploadError("At least one image is required.");
+      return;
+    }
+    if (imageFiles.some((f) => !VALID_IMAGE_TYPES.includes(f.type))) {
+      setUploadError("Only JPG, PNG, and WebP images are allowed.");
+      return;
+    }
+    if (imageFiles.some((f) => f.size > MAX_IMAGE_SIZE)) {
+      setUploadError("Each image must be under 5MB.");
+      return;
+    }
+    if (videoFiles.some((f) => !VALID_VIDEO_TYPES.includes(f.type))) {
+      setUploadError("Only MP4, WebM, and MOV videos are allowed.");
+      return;
+    }
+    if (videoFiles.some((f) => f.size > MAX_VIDEO_SIZE)) {
+      setUploadError("Each video must be under 100MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const [imageUrls, videoUrls] = await Promise.all([
+        Promise.all(imageFiles.map(uploadImageToStorage)),
+        Promise.all(videoFiles.map(uploadVideoToStorage)),
+      ]);
+
+      const fd = new FormData(formRef.current!);
+      imageUrls.forEach((url) => fd.append("imageUrls", url));
+      videoUrls.forEach((url) => fd.append("videoUrls", url));
+
+      formAction(fd);
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Upload failed. Please try again.",
+      );
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const isBusy = uploading || pending;
+
   return (
-    <form action={formAction} className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
       {isEdit && <input type="hidden" name="propertyId" value={property.id} />}
 
-      {state?.error && (
+      {(uploadError ?? state?.error) && (
         <div className="bg-red-50 border border-red-200 rounded-xl px-5 py-4 text-red-600 text-sm">
-          {state.error}
+          {uploadError ?? state?.error}
         </div>
       )}
 
@@ -346,12 +419,10 @@ export default function PropertyForm({ property }: Props) {
           </span>
           <input
             type="file"
-            name="images"
             multiple
             accept="image/jpeg,image/jpg,image/png,image/webp"
             onChange={handleImages}
             className="hidden"
-            required={!isEdit}
           />
         </label>
 
@@ -396,7 +467,6 @@ export default function PropertyForm({ property }: Props) {
           </span>
           <input
             type="file"
-            name="videos"
             multiple
             accept="video/mp4,video/webm,video/quicktime"
             onChange={handleVideos}
@@ -417,11 +487,7 @@ export default function PropertyForm({ property }: Props) {
                 </span>
                 <button
                   type="button"
-                  onClick={() =>
-                    setVideoPreviews((prev) =>
-                      prev.filter((_, idx) => idx !== i),
-                    )
-                  }
+                  onClick={() => removeVideoPreview(i)}
                   className="text-gray-400 hover:text-red-500"
                 >
                   <X size={14} />
@@ -436,17 +502,19 @@ export default function PropertyForm({ property }: Props) {
       <div className="flex items-center gap-4 pb-8">
         <button
           type="submit"
-          disabled={pending}
+          disabled={isBusy}
           className="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl disabled:opacity-60 transition-colors"
         >
           <Upload size={16} />
-          {pending
-            ? isEdit
-              ? "Saving..."
-              : "Uploading..."
-            : isEdit
-              ? "Save Changes"
-              : "Upload Property"}
+          {uploading
+            ? "Uploading files..."
+            : pending
+              ? isEdit
+                ? "Saving..."
+                : "Uploading..."
+              : isEdit
+                ? "Save Changes"
+                : "Upload Property"}
         </button>
         <a
           href="/admin/properties"
