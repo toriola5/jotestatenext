@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 /**
  * Adds the `js-animate` class to <html> and sets up an IntersectionObserver
@@ -9,40 +8,55 @@ import { usePathname } from "next/navigation";
  * view. The CSS in globals.css handles the actual transitions.
  *
  * Rendered once in the public layout, which persists across client-side
- * navigations — so the observer is rebuilt on every pathname change to pick
- * up the new page's `[data-animate]` elements. Without this, navigating away
- * and back would leave those elements stuck at their pre-reveal (invisible)
- * state, since the original observer only ever knew about the elements that
- * existed at first mount.
+ * navigations and never remounts. Sections like FeaturedProperties/
+ * PropertiesMap are async and stream into the DOM after this component's
+ * initial scan — same on first load (behind loading.tsx) and after
+ * navigating back to a page. A one-time `querySelectorAll` would miss any
+ * `[data-animate]` element that shows up later, leaving it stuck invisible.
+ * A MutationObserver watches for those elements arriving at any point and
+ * observes them as they appear, regardless of when/why they were added.
  */
 export default function ScrollReveal() {
-  const pathname = usePathname();
-
   useEffect(() => {
     const html = document.documentElement;
     html.classList.add("js-animate");
-    return () => html.classList.remove("js-animate");
-  }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);
+            io.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.12 },
     );
 
-    document.querySelectorAll("[data-animate]").forEach((el) => {
-      observer.observe(el);
+    const observeWithin = (root: ParentNode) => {
+      root.querySelectorAll("[data-animate]").forEach((el) => io.observe(el));
+    };
+
+    observeWithin(document);
+
+    const mo = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return;
+          if (node.matches("[data-animate]")) io.observe(node);
+          observeWithin(node);
+        });
+      }
     });
 
-    return () => observer.disconnect();
-  }, [pathname]);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+      html.classList.remove("js-animate");
+    };
+  }, []);
 
   return null;
 }
