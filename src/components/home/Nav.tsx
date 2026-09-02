@@ -66,7 +66,7 @@ export default function Nav() {
               alt="Jola Toriola Estates"
               width={36}
               height={36}
-              className="rounded-lg object-cover"
+              className="rounded-lg object-cover shrink-0"
             />
             <span className="text-base font-bold text-gray-900 leading-tight">
               Jola Toriola

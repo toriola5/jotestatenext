@@ -23,7 +23,7 @@ export default function About() {
         {/* Top grid: image + intro */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div className="relative" data-animate="left">
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
               <Image
                 src="/house.jpg"
                 alt="Jola Estates property"

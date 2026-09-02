@@ -52,7 +52,7 @@ export default function Footer() {
                 alt="Jola Toriola Estates"
                 width={36}
                 height={36}
-                className="rounded-lg object-cover"
+                className="rounded-lg object-cover shrink-0"
               />
               <span className="text-base font-bold text-white leading-tight">
                 Jola Toriola<br />

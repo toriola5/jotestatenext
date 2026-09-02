@@ -10,7 +10,7 @@ export default function HomeLoading() {
           alt="Jola Estates"
           width={48}
           height={48}
-          className="rounded-full object-cover"
+          className="rounded-full object-cover shrink-0"
           priority
         />
       </div>
