@@ -139,8 +139,29 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-6 text-center text-xs">
-          © {new Date().getFullYear()} Jola Estates. All rights reserved.
+        <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <p>© {new Date().getFullYear()} Jola Estates. All rights reserved.</p>
+          <a
+            href="https://dteckflex.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              className="w-3.5 h-3.5 text-[var(--primary)]"
+            >
+              <path d="M13 2 3 14h7l-1 8 10-12h-7z" />
+            </svg>
+            <span>
+              Website by{" "}
+              <span className="font-semibold text-gray-300 group-hover:text-[var(--primary)] transition-colors">
+                dteckflex
+              </span>
+            </span>
+          </a>
         </div>
       </div>
     </footer>
